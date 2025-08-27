@@ -1,0 +1,180 @@
+{
+  "v": 9,
+  "name": "Hotel Offers Aggregator",
+  "folders": [],
+  "requests": [
+    {
+      "v": "15",
+      "name": "Get hotels (delhi)",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/api/hotels",
+      "params": [
+        {
+          "key": "city",
+          "value": "delhi",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify([\n        {\n            \"name\": \"SkyStay\",\n            \"price\": 4200,\n            \"supplier\": \"Supplier A\",\n            \"commissionPct\": 15\n        },\n        {\n            \"name\": \"SunNest\",\n            \"price\": 4800,\n            \"supplier\": \"Supplier B\",\n            \"commissionPct\": 18\n        },\n        {\n            \"name\": \"Holtin\",\n            \"price\": 5340,\n            \"supplier\": \"Supplier B\",\n            \"commissionPct\": 20\n        },\n        {\n            \"name\": \"Radison\",\n            \"price\": 5900,\n            \"supplier\": \"Supplier A\",\n            \"commissionPct\": 13\n        }\n    ]));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "Get hotels (delhi, price filter)",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/api/hotels",
+      "params": [
+        {
+          "key": "city",
+          "value": "delhi",
+          "active": true,
+          "description": ""
+        },
+        {
+          "key": "minPrice",
+          "value": "5000",
+          "active": true,
+          "description": ""
+        },
+        {
+          "key": "maxPrice",
+          "value": "6000",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify([\n        {\n            \"name\": \"Holtin\",\n            \"price\": 5340,\n            \"supplier\": \"Supplier B\",\n            \"commissionPct\": 20\n        },\n        {\n            \"name\": \"Radison\",\n            \"price\": 5900,\n            \"supplier\": \"Supplier A\",\n            \"commissionPct\": 13\n        }\n    ]));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "Get hotels (no results)",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/api/hotels",
+      "params": [
+        {
+          "key": "city",
+          "value": "unknown",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify([]));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "Health",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/health",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify({\n        \"ok\": true,\n        \"suppliers\": {\n            \"Supplier A\": {\n                \"ok\": true\n            },\n            \"Supplier B\": {\n                \"ok\": true\n            }\n        }\n    }));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "Supplier A (mock)",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/supplierA/hotels",
+      "params": [
+        {
+          "key": "city",
+          "value": "delhi",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify([\n        {\n            \"hotelId\": \"a1\",\n            \"name\": \"Holtin\",\n            \"price\": 6000,\n            \"city\": \"delhi\",\n            \"commissionPct\": 10\n        },\n        {\n            \"hotelId\": \"a2\",\n            \"name\": \"Radison\",\n            \"price\": 5900,\n            \"city\": \"delhi\",\n            \"commissionPct\": 13\n        },\n        {\n            \"hotelId\": \"a3\",\n            \"name\": \"SkyStay\",\n            \"price\": 4200,\n            \"city\": \"delhi\",\n            \"commissionPct\": 15\n        }\n    ]));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "15",
+      "name": "Supplier B (mock)",
+      "method": "GET",
+      "endpoint": "http://localhost:3000/supplierB/hotels",
+      "params": [
+        {
+          "key": "city",
+          "value": "delhi",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "export {};\n\n\n// Check status code is 200\npw.test(\"Status code is 200\", ()=> {\n    pw.expect(pw.response.status).toBe(200);\n});\n\n// Check JSON response property\npw.test(\"Check JSON response property\", ()=> {\n    pw.expect(JSON.stringify(pw.response.body)).toBe(JSON.stringify([\n        {\n            \"hotelId\": \"b1\",\n            \"name\": \"Holtin\",\n            \"price\": 5340,\n            \"city\": \"delhi\",\n            \"commissionPct\": 20\n        },\n        {\n            \"hotelId\": \"b2\",\n            \"name\": \"Radison\",\n            \"price\": 6200,\n            \"city\": \"delhi\",\n            \"commissionPct\": 10\n        },\n        {\n            \"hotelId\": \"b3\",\n            \"name\": \"SunNest\",\n            \"price\": 4800,\n            \"city\": \"delhi\",\n            \"commissionPct\": 18\n        }\n    ]));\n});",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "auth": {
+    "authActive": true,
+    "authType": "inherit"
+  },
+  "headers": [],
+  "_ref_id": "coll_mett43uk_2100baee-6bab-4fa5-9385-9bbe250ed01e"
+}
