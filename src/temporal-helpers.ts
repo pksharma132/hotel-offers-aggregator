@@ -1,9 +1,9 @@
-import { Client, Connection } from "@temporalio/client";
-import { QueryParams } from "./validation-schema";
-import { logger } from "./logger";
+import { Client, Connection } from '@temporalio/client';
+import { QueryParams } from './validation-schema';
+import { logger } from './logger';
 
 export async function getTemporalClient() {
-  const connection = await Connection.connect({ address: 'localhost:7233' });
+  const connection = await Connection.connect({ address: process.env.TEMPORAL_ADDRESS || 'localhost:7233' });
 
   const client = new Client({
     connection,

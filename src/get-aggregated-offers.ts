@@ -18,7 +18,6 @@ export async function getAggregateOffers(req: Request, res: Response) {
 
     const cached = (await redis.zcard(sortedKey(city))) > 0;
 
-    logger.info({ city, minPrice, maxPrice, cached }, 'Processing /api/hotels request');
 
     if (!cached) {
       await runWorkflow(TASK_QUEUE, parsed.data);

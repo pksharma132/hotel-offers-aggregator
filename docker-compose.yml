@@ -1,0 +1,104 @@
+services:
+  postgresql:
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:12
+    networks:
+      - temporal-network
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+  temporal:
+    container_name: temporal
+    depends_on:
+      - postgresql
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/auto-setup:latest
+    networks:
+      - temporal-network
+    ports:
+      - 7233:7233
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+  temporal-web:
+    image: temporalio/ui:latest
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    depends_on:
+      - temporal
+    ports:
+      - "8080:8080"
+    networks:
+      - temporal-network
+  
+  temporal-init:
+    image: temporalio/admin-tools:1.21
+    depends_on:
+      - temporal
+    entrypoint: >
+      sh -c "
+      echo 'Waiting for Temporal to start...' &&
+      sleep 10 &&
+      tctl --address temporal:7233 namespace describe default ||
+      tctl --address temporal:7233 namespace register default
+      "
+    networks:
+      - temporal-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - temporal-network
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "sh", "-c", "npx wait-on tcp:temporal:7233 && node lib/worker.js" ]
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - REDIS_URL=redis://redis:6379
+      - API_BASE_URL=http://server:3000
+
+    depends_on:
+      - temporal
+      - redis
+      - temporal-init
+    networks:
+      - temporal-network
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "node", "lib/index.js" ]
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - REDIS_URL=redis://redis:6379
+      - API_BASE_URL=http://server:3000
+    depends_on:
+      - temporal
+      - redis
+      - temporal-init
+    ports:
+      - "3000:3000"
+    networks:
+      - temporal-network
+
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network
