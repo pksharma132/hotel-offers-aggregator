@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { httpLogger, logger } from './logger';
 import { supplierAHandler, supplierBHandler } from './suppliers';
@@ -17,7 +16,10 @@ app.get('/supplierB/hotels', supplierBHandler);
 app.get('/health', async (req, res) => {
   const report: HealthReport = { ok: true, suppliers: {} };
   const base = `http://localhost:${PORT}`;
-  const suppliers = [['Supplier A','/supplierA/hotels'], ['Supplier B','/supplierB/hotels']];
+  const suppliers = [
+    ['Supplier A', '/supplierA/hotels'],
+    ['Supplier B', '/supplierB/hotels'],
+  ];
   for (const [name, path] of suppliers) {
     try {
       const url = new URL(path, base);
@@ -33,8 +35,7 @@ app.get('/health', async (req, res) => {
   res.json(report);
 });
 
-
-app.get('/api/hotels', getAggregateOffers); 
+app.get('/api/hotels', getAggregateOffers);
 
 app.listen(PORT, () => {
   logger.info({ PORT }, 'API server listening');

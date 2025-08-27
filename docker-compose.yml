@@ -38,10 +38,10 @@ services:
     depends_on:
       - temporal
     ports:
-      - "8080:8080"
+      - '8080:8080'
     networks:
       - temporal-network
-  
+
   temporal-init:
     image: temporalio/admin-tools:1.21
     depends_on:
@@ -59,7 +59,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - temporal-network
 
@@ -67,7 +67,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: [ "sh", "-c", "npx wait-on tcp:temporal:7233 && node lib/worker.js" ]
+    command: ['sh', '-c', 'npx wait-on tcp:temporal:7233 && node lib/worker.js']
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - REDIS_URL=redis://redis:6379
@@ -84,7 +84,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: [ "node", "lib/index.js" ]
+    command: ['node', 'lib/index.js']
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - REDIS_URL=redis://redis:6379
@@ -94,7 +94,7 @@ services:
       - redis
       - temporal-init
     ports:
-      - "3000:3000"
+      - '3000:3000'
     networks:
       - temporal-network
 

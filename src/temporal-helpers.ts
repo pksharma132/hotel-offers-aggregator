@@ -16,7 +16,7 @@ export async function runWorkflow(taskQueue: string, args: QueryParams) {
   const client = await getTemporalClient();
 
   const handle = await client.workflow.start('aggregateHotelsWorkflow', {
-    taskQueue: taskQueue,
+    taskQueue,
     args: [args],
     workflowId: 'workflow-' + Date.now(),
   });

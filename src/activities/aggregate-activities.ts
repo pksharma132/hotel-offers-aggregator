@@ -31,7 +31,7 @@ export async function saveToRedis(city: string, hotels: PublicHotel[]): Promise<
   const key = sortedKey(city);
   const pipeline = redis.pipeline();
   pipeline.del(key);
-  hotels.forEach(h => {
+  hotels.forEach((h) => {
     pipeline.zadd(key, h.price, JSON.stringify(h));
   });
 
@@ -46,5 +46,5 @@ export async function filterFromRedis(city: string, minPrice?: number, maxPrice?
   const min = Number.isFinite(minPrice) ? String(minPrice) : '-inf';
   const max = Number.isFinite(maxPrice) ? String(maxPrice) : '+inf';
   const members = await redis.zrangebyscore(key, min, max);
-  return members.map(m => JSON.parse(m));
+  return members.map((m) => JSON.parse(m));
 }
